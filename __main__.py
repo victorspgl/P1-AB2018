@@ -69,7 +69,6 @@ while True:
     elif(comando == "q"):
         query = leer_query()
         configuracion.do(query)
-        #TODO: ALgoritmo voraz
     elif(comando == "h"):
         muestra_ayuda()
     else:

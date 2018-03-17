@@ -44,6 +44,11 @@ class Grafo:
                     timestamp_minimo = arista.get_timestamp
                     arista_elegida = arista
 
-            conjunto_visitados.append(arista_elegida.get_vertice_final())
+            id_nuevo_vertice = arista_elegida.get_vertice_final()
+            conjunto_visitados.append(id_nuevo_vertice)
+            time = arista_elegida.get_timestamp()
+
+            nuevas_aristas = self.vertices[id_nuevo_vertice].get_aristas()
+            vector_aristas = vector_aristas + nuevas_aristas
 
 
