@@ -26,19 +26,26 @@ class Grafo:
     def do(self,query):
         nodo_inicial = query.get_nodo_infectado()
         nodo_final = query.get_nodo_consulta()
+        if nodo_inicial == nodo_final:
+            if query.get_timestamp_consulta() >= query.get_timestamp_infeccion():
+                return True
+            else:
+                return False
+
         conjunto_visitados = [nodo_inicial]
         vector_aristas = self.vertices[nodo_inicial].get_aristas()
         time = query.get_timestamp_infeccion()
 
-        arista_elegida = None
+
         while( not (nodo_final in conjunto_visitados)):
+            aristas_por_eliminar = []
             timestamp_minimo = float('Inf')
             arista_elegida = None
 
             for arista in vector_aristas:
 
                 if arista.get_timestamp() < time or arista.get_vertice_final() in conjunto_visitados :
-                    vector_aristas.remove(arista)
+                    aristas_por_eliminar.append(arista)
                     continue
 
                 if arista.get_timestamp() < timestamp_minimo:
@@ -48,6 +55,8 @@ class Grafo:
             if arista_elegida == None:
                 return False
 
+            for elemento in aristas_por_eliminar:
+                vector_aristas.remove(elemento)
             id_nuevo_vertice = arista_elegida.get_vertice_final()
             conjunto_visitados.append(id_nuevo_vertice)
             time = arista_elegida.get_timestamp()
@@ -55,4 +64,4 @@ class Grafo:
             nuevas_aristas = self.vertices[id_nuevo_vertice].get_aristas()
             vector_aristas = vector_aristas + nuevas_aristas
 
-        return arista_elegida.get_timestamp() < query.get_timestamp_consulta()
+        return arista_elegida.get_timestamp() <= query.get_timestamp_consulta()

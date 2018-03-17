@@ -5,7 +5,7 @@
 class Arista:
 
     def __init__(self, vertice_inicial, vertice_final, timestamp):
-        self.vertice_inicial = vertice_final
+        self.vertice_inicial = vertice_inicial
         self.vertice_final   = vertice_final
         self.timestamp       = timestamp
 
