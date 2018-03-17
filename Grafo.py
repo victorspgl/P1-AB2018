@@ -36,13 +36,16 @@ class Grafo:
 
             for arista in vector_aristas:
 
-                if arista.get_timestamp() < time :
+                if arista.get_timestamp() < time or arista.get_vertice_final() in conjunto_visitados :
                     vector_aristas.remove(arista)
                     continue
 
                 if arista.get_timestamp() < timestamp_minimo:
-                    timestamp_minimo = arista.get_timestamp
+                    timestamp_minimo = arista.get_timestamp()
                     arista_elegida = arista
+
+            if arista_elegida == None:
+                return False
 
             id_nuevo_vertice = arista_elegida.get_vertice_final()
             conjunto_visitados.append(id_nuevo_vertice)
@@ -51,4 +54,4 @@ class Grafo:
             nuevas_aristas = self.vertices[id_nuevo_vertice].get_aristas()
             vector_aristas = vector_aristas + nuevas_aristas
 
-
+        return arista_elegida.get_timestamp() < query.get_timestamp_consulta()

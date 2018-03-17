@@ -5,7 +5,7 @@
 class Query:
 
     def __init__(self,string):
-        nodo_infectado, nodo_consulta, timestamp_infeccion, timestamp_consulta = [int(i) for i in lineas[0].split(' ')]
+        nodo_infectado, nodo_consulta, timestamp_infeccion, timestamp_consulta = [int(i) for i in string.split(' ')]
         self.nodo_infectado = nodo_infectado
         self.nodo_consulta = nodo_consulta
         self.timestamp_infeccion = timestamp_infeccion
@@ -19,3 +19,6 @@ class Query:
 
     def get_timestamp_infeccion(self):
         return self.timestamp_infeccion
+
+    def get_timestamp_consulta(self):
+        return self.timestamp_consulta

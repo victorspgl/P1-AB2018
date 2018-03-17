@@ -23,7 +23,7 @@ def muestra_ayuda():
 def leer_nombre_fichero():
     correcto = False
     while not correcto:
-        nombre_fichero = input("Introduce fichero de entrada: ")
+        nombre_fichero = raw_input("Introduce fichero de entrada: ")
 
         try:
             configuracion = read_description(nombre_fichero)
@@ -37,7 +37,7 @@ def leer_nombre_fichero():
 def leer_query():
     correcto = False
     while not correcto:
-        lectura_teclado = input("Introduce query: ")
+        lectura_teclado = raw_input("Introduce query: ")
 
         try:
             query = Query(lectura_teclado)
@@ -62,13 +62,17 @@ print("h - ayuda")
 
 while True:
 
-    comando = input("$$: ")
+    comando = raw_input("$$: ")
 
     if(comando == "c"):
         configuracion = leer_nombre_fichero()
     elif(comando == "q"):
         query = leer_query()
-        configuracion.do(query)
+        infectado = configuracion.do(query)
+        if infectado :
+            print("Nodo infectado")
+        else:
+            print("Nodo no infectado")
     elif(comando == "h"):
         muestra_ayuda()
     else:

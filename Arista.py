@@ -17,3 +17,6 @@ class Arista:
 
     def get_vertice_final(self):
         return self.vertice_final
+
+    def get_timestamp(self):
+        return self.timestamp
