@@ -30,6 +30,7 @@ class Grafo:
         vector_aristas = self.vertices[nodo_inicial].get_aristas()
         time = query.get_timestamp_infeccion()
 
+        arista_elegida = None
         while( not (nodo_final in conjunto_visitados)):
             timestamp_minimo = float('Inf')
             arista_elegida = None
