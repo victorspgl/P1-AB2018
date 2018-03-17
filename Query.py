@@ -10,3 +10,12 @@ class Query:
         self.nodo_consulta = nodo_consulta
         self.timestamp_infeccion = timestamp_infeccion
         self.timestamp_consulta  = timestamp_consulta
+
+    def get_nodo_infectado(self):
+        return self.nodo_infectado
+
+    def get_nodo_consulta(self):
+        return self.nodo_consulta
+
+    def get_timestamp_infeccion(self):
+        return self.timestamp_infeccion

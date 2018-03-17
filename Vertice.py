@@ -10,3 +10,6 @@ class Vertice:
 
     def add_arista(self,arista):
         self.aristas.append(arista)
+
+    def get_aristas(self):
+        return self.aristas
