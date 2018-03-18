@@ -13,13 +13,16 @@ from Query import Query
 def muestra_ayuda():
     print(" El comando 'c' permite cambiar fichero de referencia")
     print(" Este fichero debe seguir el siguiente formato:")
-    #TODO: Especificar formato de los ficheros de entradaa
+    # TODO: Especificar formato de los ficheros de entradaa
     print(" El comando 'q' permite introducir una query al sistema")
     print(" La query debe tener el siguiente formato:")
-    #TODO: Especificar el forma de las querys
+    # TODO: Especificar el forma de las querys
+
 
 """ Funcion que pide al usuario el nombre de un fichero y lo intenta interpretar. Si el fichero no es valido lo vuelve
     a intentar. """
+
+
 def leer_nombre_fichero():
     correcto = False
     while not correcto:
@@ -33,7 +36,10 @@ def leer_nombre_fichero():
 
     return configuracion
 
+
 """ Funcion que pide al usuario una query. Si la query no es valida lo vuelve a intentar. """
+
+
 def leer_query():
     correcto = False
     while not correcto:
@@ -48,7 +54,6 @@ def leer_query():
     return query
 
 
-
 ########################################################################################################################
 ##########################################         MAIN         ########################################################
 ########################################################################################################################
@@ -58,26 +63,28 @@ configuracion = leer_nombre_fichero()
 print("Introduce un comando:")
 print("c - cambiar fichero de referencia")
 print("q - realizar una query")
+print("v - visualizar el fichero de referencia")
 print("h - ayuda")
 
 while True:
 
     comando = raw_input("$$: ")
 
-    if(comando == "c"):
+    if (comando == "c"):
         configuracion = leer_nombre_fichero()
-    elif(comando == "q"):
+    elif (comando == "q"):
         query = leer_query()
         infectado = configuracion.do(query)
-        if infectado :
+        if infectado:
             print("Nodo infectado")
         else:
             print("Nodo no infectado")
-    elif(comando == "h"):
+    elif (comando == "h"):
         muestra_ayuda()
+    elif (comando == "v"):
+        configuracion.dibujar()
     else:
         print("Comando incorrecto")
         muestra_ayuda()
-
 
     print("Introduce un comando:")

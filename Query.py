@@ -3,13 +3,12 @@
 # 16 Marzo 2018
 
 class Query:
-
-    def __init__(self,string):
+    def __init__(self, string):
         nodo_infectado, nodo_consulta, timestamp_infeccion, timestamp_consulta = [int(i) for i in string.split(' ')]
         self.nodo_infectado = nodo_infectado
         self.nodo_consulta = nodo_consulta
         self.timestamp_infeccion = timestamp_infeccion
-        self.timestamp_consulta  = timestamp_consulta
+        self.timestamp_consulta = timestamp_consulta
 
     def get_nodo_infectado(self):
         return self.nodo_infectado
