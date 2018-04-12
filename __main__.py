@@ -2,6 +2,7 @@
 # Javier Corbalan y Victor Soria
 # 16 Marzo 2018
 
+from random_graph import random_graph
 from description_file_reader import read_description
 from Query import Query
 
@@ -54,6 +55,35 @@ def leer_query():
     return query
 
 
+""" Funcion que pide al usuario la descripcion del grafo. Si la descripcion no es valida lo vuelve a intentar. """
+
+
+def leer_descripcion():
+    correcto = False
+    while not correcto:
+        string = raw_input("Introduce numero de vertices, aristas y el tiempo de comunicacion maximo: ")
+
+        try:
+            num_vertices, num_aristas, max_timestamp = [int(i) for i in string.split(' ')]
+        except:
+            print("Descripcion en formato incorrecto")
+            continue
+
+        try:
+            random_graph(num_vertices, num_aristas, max_timestamp)
+        except:
+            print("Error al crear el fichero")
+            continue
+
+        try:
+            configuracion = read_description("random_graph.txt")
+            correcto = True
+        except:
+            print("Error al cargar el fichero")
+
+    return configuracion
+
+
 ########################################################################################################################
 ##########################################         MAIN         ########################################################
 ########################################################################################################################
@@ -64,6 +94,7 @@ print("Introduce un comando:")
 print("c - cambiar fichero de referencia")
 print("q - realizar una query")
 print("v - visualizar el fichero de referencia")
+print("r - crear un grafo aleatorio y cargarlo en memoria")
 print("h - ayuda")
 
 while True:
@@ -83,6 +114,8 @@ while True:
         muestra_ayuda()
     elif (comando == "v"):
         configuracion.dibujar()
+    elif (comando == "r"):
+        configuracion = leer_descripcion()
     else:
         print("Comando incorrecto")
         muestra_ayuda()
