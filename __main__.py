@@ -2,6 +2,7 @@
 # Javier Corbalan y Victor Soria
 # 16 Marzo 2018
 
+import cProfile
 from random_graph import random_graph
 from description_file_reader import read_description
 from Query import Query
@@ -105,6 +106,7 @@ while True:
         configuracion = leer_nombre_fichero()
     elif (comando == "q"):
         query = leer_query()
+        cProfile.run('configuracion.do(query)')
         infectado = configuracion.do(query)
         if infectado:
             print("Nodo infectado")
