@@ -4,6 +4,7 @@
 
 from Vertice import Vertice
 from Arista import Arista
+import heapq
 import networkx as nx
 
 class Grafo:
@@ -46,34 +47,31 @@ class Grafo:
                 return False
 
         conjunto_visitados = [nodo_inicial]
-        vector_aristas = self.vertices[nodo_inicial].get_aristas()
+        vector_aristas = []
+        for arista in self.vertices[nodo_inicial].get_aristas():
+            heapq.heappush(vector_aristas,arista)
         time = query.get_timestamp_infeccion()
 
         while (not (nodo_final in conjunto_visitados)):
-            aristas_por_eliminar = []
-            timestamp_minimo = float('Inf')
             arista_elegida = None
 
-            for arista in vector_aristas:
+            while arista_elegida == None:
+
+                arista = heapq.heappop(vector_aristas)
 
                 if arista.get_timestamp() < time or arista.get_vertice_final() in conjunto_visitados:
-                    aristas_por_eliminar.append(arista)
                     continue
 
-                if arista.get_timestamp() < timestamp_minimo:
-                    timestamp_minimo = arista.get_timestamp()
-                    arista_elegida = arista
+                arista_elegida = arista
 
             if arista_elegida is None:
                 return False
 
-            for elemento in aristas_por_eliminar:
-                vector_aristas.remove(elemento)
             id_nuevo_vertice = arista_elegida.get_vertice_final()
             conjunto_visitados.append(id_nuevo_vertice)
             time = arista_elegida.get_timestamp()
 
-            nuevas_aristas = self.vertices[id_nuevo_vertice].get_aristas()
-            vector_aristas = vector_aristas + nuevas_aristas
+            for arista in self.vertices[id_nuevo_vertice].get_aristas():
+                heapq.heappush(vector_aristas,arista)
 
         return arista_elegida.get_timestamp() <= query.get_timestamp_consulta()
