@@ -5,6 +5,7 @@
 from Vertice import Vertice
 from Arista import Arista
 import heapq
+import numpy as np
 import networkx as nx
 
 class Grafo:
@@ -49,7 +50,7 @@ class Grafo:
         conjunto_visitados = [nodo_inicial]
         vector_aristas = []
         for arista in self.vertices[nodo_inicial].get_aristas():
-            heapq.heappush(vector_aristas,arista)
+            heapq.heappush(vector_aristas,[arista.get_timestamp(), arista])
         time = query.get_timestamp_infeccion()
 
         while (not (nodo_final in conjunto_visitados)):
@@ -57,9 +58,9 @@ class Grafo:
 
             while arista_elegida == None:
 
-                arista = heapq.heappop(vector_aristas)
+                timestamp, arista = heapq.heappop(vector_aristas)
 
-                if arista.get_timestamp() < time or arista.get_vertice_final() in conjunto_visitados:
+                if timestamp < time or arista.get_vertice_final() in conjunto_visitados:
                     continue
 
                 arista_elegida = arista
@@ -72,6 +73,71 @@ class Grafo:
             time = arista_elegida.get_timestamp()
 
             for arista in self.vertices[id_nuevo_vertice].get_aristas():
-                heapq.heappush(vector_aristas,arista)
+                heapq.heappush(vector_aristas,[arista.get_timestamp(), arista])
 
         return arista_elegida.get_timestamp() <= query.get_timestamp_consulta()
+
+    def do2(self, query):
+        nodo_inicial = query.get_nodo_infectado()
+        nodo_final = query.get_nodo_consulta()
+        time = query.get_timestamp_infeccion()
+
+        if nodo_inicial == nodo_final:
+            if query.get_timestamp_consulta() >= query.get_timestamp_infeccion():
+                return True
+            else:
+                return False
+
+        conjunto_visitados = [nodo_inicial]
+        vector_aristas = radixSort(self.vertices[nodo_inicial].get_aristas())
+
+        while (not (nodo_final in conjunto_visitados)):
+
+            for arista in vector_aristas:
+
+                if arista.get_timestamp() < time or arista.get_vertice_final() in conjunto_visitados:
+                    continue
+
+                arista_elegida = arista
+                break
+
+            if arista_elegida is None:
+                return False
+
+            id_nuevo_vertice = arista_elegida.get_vertice_final()
+            conjunto_visitados.append(id_nuevo_vertice)
+            time = arista_elegida.get_timestamp()
+
+            vector_aristas = vector_aristas + self.vertices[id_nuevo_vertice].get_aristas()
+            vector_aristas = radixSort(vector_aristas)
+
+        return arista_elegida.get_timestamp() <= query.get_timestamp_consulta()
+
+    def do3(self, query):
+        nodo_inicial = query.get_nodo_infectado()
+        nodo_final = query.get_nodo_consulta()
+        time = query.get_timestamp_infeccion()
+        limite = query.get_timestamp_consulta()
+
+        if nodo_inicial == nodo_final:
+            if query.get_timestamp_consulta() >= query.get_timestamp_infeccion():
+                return True
+            else:
+                return False
+
+        matriz = np.zeros(self.num_vertices)
+
+        matriz[nodo_inicial, nodo_inicial] = time
+
+        lista_aristas = self.vertices[nodo_inicial].get_aristas()
+
+        for arista in lista_aristas:
+            if  (arista.get_timestamp() > time and arista.get_timestamp() < limite and
+                (matriz[nodo_inicial,arista.get_vertice_final()] == 0 or matriz[nodo_inicial,arista.vertice_final] > arista.get_timestamp())):
+                matriz[nodo_inicial, nodo_final] = arista.get_timestamp()
+
+        return arista_elegida.get_timestamp() <= query.get_timestamp_consulta()
+
+    def radixSort(self, vector_aristas):
+        return vector_aristas
+

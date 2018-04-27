@@ -3,14 +3,19 @@
 # 16 Marzo 2018
 
 import random
+from Grafo import Grafo
 import numpy as np
 
-def random_graph(num_vertices, num_aristas, max_time):
+def random_graph(conFichero, num_vertices, num_aristas, max_time):
     if num_aristas > num_vertices*(num_vertices -1):
         print("Numero de aristas superior a n*(n-1). Siendo n el numero de vertices.")
         raise Exception
-    fichero_objeto = open("random_graph.txt", "w")
-    fichero_objeto.write(str(num_vertices) + " " + str(num_aristas) + "\n")
+    if conFichero:
+        fichero_objeto = open("random_graph.txt", "w")
+        fichero_objeto.write(str(num_vertices) + " " + str(num_aristas) + "\n")
+
+    configuracion = Grafo(num_vertices, num_aristas)
+
     matriz_conectados = []
     for i in range(0,num_vertices):
         matriz_conectados.append(range(0, num_vertices))
@@ -27,12 +32,18 @@ def random_graph(num_vertices, num_aristas, max_time):
             except:
                 nok = True
 
-
         timestamp = random.randint(1, max_time)
-        fichero_objeto.write(str(vertice_inicial) + " ")
-        fichero_objeto.write(str(vertice_final) + " ")
-        fichero_objeto.write(str(timestamp))
-        fichero_objeto.write("\n")
 
-    fichero_objeto.close()
+        configuracion.add_arista(vertice_inicial, vertice_final, timestamp)
+
+        if conFichero:
+            fichero_objeto.write(str(vertice_inicial) + " ")
+            fichero_objeto.write(str(vertice_final) + " ")
+            fichero_objeto.write(str(timestamp))
+            fichero_objeto.write("\n")
+
+    if conFichero:
+        fichero_objeto.close()
+
+    return configuracion
 

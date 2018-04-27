@@ -17,6 +17,8 @@ def muestra_ayuda():
     print(" Este fichero debe seguir el siguiente formato:")
     # TODO: Especificar formato de los ficheros de entradaa
     print(" El comando 'q' permite introducir una query al sistema")
+    print(" El comando 'r' permite crear un grafo aleatorio, especificandolo de la siguiente manera:")
+    print(" El comando 'rf' permite crear un grafo aleatorio y guardarlo en un fichero")
     print(" La query debe tener el siguiente formato:")
     # TODO: Especificar el forma de las querys
 
@@ -59,7 +61,7 @@ def leer_query():
 """ Funcion que pide al usuario la descripcion del grafo. Si la descripcion no es valida lo vuelve a intentar. """
 
 
-def leer_descripcion():
+def leer_descripcion(conFichero):
     correcto = False
     while not correcto:
         string = raw_input("Introduce numero de vertices, aristas y el tiempo de comunicacion maximo: ")
@@ -71,16 +73,12 @@ def leer_descripcion():
             continue
 
         try:
-            random_graph(num_vertices, num_aristas, max_timestamp)
+            configuracion = random_graph(conFichero, num_vertices, num_aristas, max_timestamp)
         except:
             print("Error al crear el fichero")
             continue
 
-        try:
-            configuracion = read_description("random_graph.txt")
-            correcto = True
-        except:
-            print("Error al cargar el fichero")
+        correcto = True
 
     return configuracion
 
@@ -95,7 +93,8 @@ print("Introduce un comando:")
 print("c - cambiar fichero de referencia")
 print("q - realizar una query")
 print("v - visualizar el fichero de referencia")
-print("r - crear un grafo aleatorio y cargarlo en memoria")
+print("r - crear un grafo aleatorio en memoria")
+print("rf - crear un grafo aleatorio y cargarlo en memoria")
 print("h - ayuda")
 
 while True:
@@ -116,8 +115,10 @@ while True:
         muestra_ayuda()
     elif (comando == "v"):
         configuracion.dibujar()
+    elif (comando == "rf"):
+        configuracion = leer_descripcion(True)
     elif (comando == "r"):
-        configuracion = leer_descripcion()
+        configuracion = leer_descripcion(False)
     else:
         print("Comando incorrecto")
         muestra_ayuda()
