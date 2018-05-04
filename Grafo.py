@@ -100,28 +100,18 @@ class Grafo:
     def do2(self, query):
         nodo_inicial = query.get_nodo_infectado()
         nodo_final = query.get_nodo_consulta()
-        time = query.get_timestamp_infeccion()
-        limite = query.get_timestamp_consulta()
+        timestamp_infeccion = query.get_timestamp_infeccion()
+        timestamp_consulta = query.get_timestamp_consulta()
 
-        if nodo_inicial == nodo_final:
-            if query.get_timestamp_consulta() >= query.get_timestamp_infeccion():
-                return True
-            else:
-                return False
+        infectados = []
+        for i in range(0, self.num_vertices):
+            infectados.append(-1)
 
-        vector_nodos = []
-        heapq.heappush(vector_nodos,[time, nodo_inicial])
-        nodos_visitados = []
+        for i in range(0,self.num_aristas):
+            arista = self.get_arista(i)
 
-        while True:
+            if arista.timestamp < timestamp_infeccion:
+                continue
+            if arista.timestamp > timestamp_consulta:
+                break
 
-            timestamp, nodo_siguiente = heapq.heappop(vector_nodos)
-
-            if nodo_siguiente == nodo_final:
-                return timestamp >= query.get_timestamp_consulta()
-
-            lista_aristas = self.vertices[nodo_siguiente].get_aristas()
-
-            for arista in lista_aristas:
-                if  (arista.get_timestamp() >= timestamp and arista.get_timestamp() < limite):
-                    heapq.heappush(vector_nodos,[arista.timestamp, arista.get_vertice_final()])
