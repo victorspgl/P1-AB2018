@@ -31,9 +31,11 @@ class Grafo:
         aux = []
 
         for i in range(0,self.num_aristas):
-            aux.append(heapq.heapop())
+            timestamp, arista = heapq.heappop(self.aristas)
+            aux.append(arista)
 
         self.aristas = aux
+        self.ordenado = True
 
 
     def get_arista(self, indice):
@@ -107,6 +109,11 @@ class Grafo:
         for i in range(0, self.num_vertices):
             infectados.append(-1)
 
+        infectados[nodo_inicial] = timestamp_infeccion
+
+        espera = []
+        modificado = False
+        tamanyo = 0
         for i in range(0,self.num_aristas):
             arista = self.get_arista(i)
 
@@ -115,3 +122,53 @@ class Grafo:
             if arista.timestamp > timestamp_consulta:
                 break
 
+            if tamanyo > 0:
+                if espera[0].timestamp < arista.timestamp:
+                    if modificado:
+                        self.eliminarEsperando(infectados, espera)
+                        espera = []
+                        modificado = False
+                        tamanyo = 0
+                    else:
+                        espera = []
+                        modificado = False
+                        tamanyo = 0
+
+
+            if infectados[arista.vertice_inicial] == -1 and infectados[arista.vertice_final] == -1:
+                tamanyo = tamanyo + 1
+                espera.append(arista)
+
+            if infectados[arista.vertice_inicial] > -1 and infectados[arista.vertice_final] == -1:
+                infectados[arista.vertice_final] = arista.timestamp
+                if tamanyo > 0:
+                    modificado = True
+
+            if infectados[arista.vertice_inicial] == -1 and infectados[arista.vertice_final] > -1:
+                infectados[arista.vertice_inicial] = arista.timestamp
+                if tamanyo > 0:
+                    modificado = True
+
+        return infectados[nodo_final] <= timestamp_consulta
+
+    def eliminarEsperando(self, infectados, espera):
+        pendientes = []
+        tamanyo = 0
+        modificado = False
+        for arista in espera:
+            if infectados[arista.vertice_inicial] == -1 and infectados[arista.vertice_final] == -1:
+                tamanyo = tamanyo + 1
+                pendientes.append(arista)
+
+            if infectados[arista.vertice_inicial] > -1 and infectados[arista.vertice_final] == -1:
+                infectados[arista.vertice_final] = arista.timestamp
+                if tamanyo > 0:
+                    modificado = True
+
+            if infectados[arista.vertice_inicial] == -1 and infectados[arista.vertice_final] > -1:
+                infectados[arista.vertice_inicial] = arista.timestamp
+                if tamanyo > 0:
+                    modificado = True
+
+        if modificado:
+            self.eliminarEsperando(infectados, pendientes)

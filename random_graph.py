@@ -37,6 +37,8 @@ def random_graph(conFichero, num_vertices, num_aristas, max_time):
 
         configuracion.add_arista(vertice_inicial, vertice_final, timestamp)
 
+    configuracion.ordenar()
+
     if conFichero:
         for i in range(0,num_aristas):
 

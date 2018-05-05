@@ -111,6 +111,14 @@ while True:
             print("Nodo infectado")
         else:
             print("Nodo no infectado")
+    elif (comando == "q2"):
+        query = leer_query()
+        cProfile.run('configuracion.do2(query)')
+        infectado = configuracion.do2(query)
+        if infectado:
+            print("Nodo infectado")
+        else:
+            print("Nodo no infectado")
     elif (comando == "h"):
         muestra_ayuda()
     elif (comando == "v"):
