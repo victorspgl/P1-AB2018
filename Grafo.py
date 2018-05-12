@@ -59,6 +59,24 @@ class Grafo:
         nx.draw_networkx(G, pos, node_size=1500, node_color='yellow')
         plt.show()
 
+
+
+    """
+        Algoritmo recorre los vertices desde el primer infectado anyadiendo un nuevo infectado
+        cada vez. Para ello utiliza la arista con menor timestamp que une un nodo infectado
+        con otro que no lo esta. Para ello se utiliza un monticulo donde se anyaden todas
+        las aristas de los nodos infectados.
+        
+        El coste del algoritmo:     (n es el numero de vertices)
+            El coste en espacio en el caso peor es O(n**2). Ya que es necesario almacenar todos 
+                los vertices(n), y el numero de aristas(n**2 en el caso peor)
+            El coste en tiempo en el peor caso es O(n**3) en el caso en el que todas las aristas
+                tengan el mismo timestamp. Ya que se recorren n vertices y para cada vertice se
+                pueden sacar del orden de n**2 aristas.
+            El coste en tiempo en el caso de que las aristas sean diferentes O(n**2 * log(n)),
+                si necesario recorrer todos los vertices, y cada vertice posea n-1 aristas, 
+                anyadir cada arista supone un coste (log n).
+    """
     def do(self, query):
         nodo_inicial = query.get_nodo_infectado()
         nodo_final = query.get_nodo_consulta()
@@ -79,10 +97,10 @@ class Grafo:
 
             while arista_elegida == None:
 
-                timestamp, arista = heapq.heappop(vector_aristas)
+                timestamp, arista = heapq.heappop(vector_aristas) # O(log(n))
 
                 if timestamp < time or arista.get_vertice_final() in conjunto_visitados:
-                    continue
+                    continue        # O(n)
 
                 arista_elegida = arista
 
@@ -93,12 +111,31 @@ class Grafo:
             conjunto_visitados.append(id_nuevo_vertice)
             time = arista_elegida.get_timestamp()
 
-            for arista in self.vertices[id_nuevo_vertice].get_aristas():
-                heapq.heappush(vector_aristas,[arista.get_timestamp(), arista])
+            for arista in self.vertices[id_nuevo_vertice].get_aristas(): # O(n * log(n))
+                if arista.timestamp < timestamp:
+                    continue
+                heapq.heappush(vector_aristas,[arista.get_timestamp(), arista]) # O(log(n))
 
         return arista_elegida.get_timestamp() <= query.get_timestamp_consulta()
 
 
+
+    """
+        Algoritmo que recorre las aristas ordenadas por timestamp menor a mayor. Utiliza un vector
+        que almacena cuando un vector ha sido infectado. Los vertices que no han sido infectados
+        tienen valor -1.
+        
+        El coste del algoritmo:     (n es el numero de vertices)
+            El coste en espacio en el caso peor es O(n**2). Ya que es necesario almacenar todos 
+                los vertices(n), y el numero de aristas(n**2 en el caso peor)
+            El coste en tiempo en el peor caso es O(n**3), ya que en el caso de que todas las
+                aristas tengan el mismo timestamp, el recorrido de los nodos infectados no es
+                trivial(De menor timestamp a mayor). Por lo que tras infectar cada nuevo nodo
+                es necesario comprobar de nuevo las aristas que anteriormente no han infectado
+                a ningun nuevo nodo.
+            El coste en tiempo en el caso de que cada arista tenga un timestamp diferente es
+                O(n**2). Corresponde con recorrer todas las aristas una unica vez.
+    """
     def do2(self, query):
         nodo_inicial = query.get_nodo_infectado()
         nodo_final = query.get_nodo_consulta()
