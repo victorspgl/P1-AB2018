@@ -4,7 +4,7 @@
 
 class Query:
     def __init__(self, string):
-        nodo_infectado, nodo_consulta, timestamp_infeccion, timestamp_consulta = [int(i) for i in string.split(' ')]
+        nodo_infectado, timestamp_infeccion, nodo_consulta, timestamp_consulta = [int(i) for i in string.split(' ')]
         self.nodo_infectado = nodo_infectado
         self.nodo_consulta = nodo_consulta
         self.timestamp_infeccion = timestamp_infeccion

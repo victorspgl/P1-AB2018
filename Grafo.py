@@ -6,6 +6,7 @@ from Vertice import Vertice
 from Arista import Arista
 import heapq
 import networkx as nx
+from matplotlib import pyplot as plt
 
 class Grafo:
     def __init__(self, num_vertices, num_aristas):
@@ -209,3 +210,22 @@ class Grafo:
 
         if modificado:
             self.eliminarEsperando(infectados, pendientes)
+
+    def BFS(self, query):
+        orig = query.get_nodo_infectado()
+        dest = query.get_nodo_consulta()
+        limite = query.get_timestamp_consulta()
+        abiertos = []
+        cerrados = []
+        abiertos.append(self.vertices[orig])
+        while len(abiertos) > 0:
+            nodo = abiertos.pop(len(abiertos)-1)   # Obtiene el ultimo nodo
+            cerrados.append(nodo)
+            for arista in nodo.get_aristas():
+                if arista.get_timestamp() < limite:
+                    hijo = self.vertices[arista.get_vertice_final()]
+                    if hijo == self.vertices[dest]:
+                        return True
+                    if hijo not in cerrados:
+                        abiertos.append(hijo)
+        return False
