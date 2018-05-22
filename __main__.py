@@ -6,6 +6,7 @@ import cProfile
 from random_graph import random_graph
 from description_file_reader import read_description
 from Query import Query
+import random
 
 
 ########################################################################################################################
@@ -28,16 +29,19 @@ def muestra_ayuda():
 
 
 def leer_nombre_fichero():
-    correcto = False
-    while not correcto:
+    configuracion = None
+    while configuracion is None:
         nombre_fichero = raw_input("Introduce fichero de entrada: ")
+        configuracion = intentar_leer_fichero(nombre_fichero)
 
-        try:
-            configuracion = read_description(nombre_fichero)
-            correcto = True
-        except:
-            print("Fichero en formato incorrecto o ilegible")
+    return configuracion
 
+def intentar_leer_fichero(nombre_fichero):
+    configuracion = None
+    try:
+        configuracion = read_description(nombre_fichero)
+    except:
+        print("Fichero en formato incorrecto o ilegible")
     return configuracion
 
 
@@ -45,16 +49,19 @@ def leer_nombre_fichero():
 
 
 def leer_query():
-    correcto = False
-    while not correcto:
+    query = None
+    while query is None:
         lectura_teclado = raw_input("Introduce query: ")
+        query = construir_query(lectura_teclado)
+    return query
 
-        try:
-            query = Query(lectura_teclado)
-            correcto = True
-        except:
-            print("Query en formato incorrecto")
 
+def construir_query(cadena):
+    query = None
+    try:
+        query = Query(cadena)
+    except:
+        print("Query en formato incorrecto")
     return query
 
 
@@ -82,6 +89,24 @@ def leer_descripcion(conFichero):
 
     return configuracion
 
+def query_aleatorio(configuracion):
+    max_vert = configuracion.get_num_vertices()
+    max_ts = configuracion.get_max_ts()
+    # Elegir nodos aleatorios
+    nodo_infectado = random.randrange(0, max_vert)
+    nodo_consulta = random.randrange(0, max_vert)
+    # Elegir timestamps
+    ts_infeccion = random.randrange(0, max_ts)
+    ts_consulta = random.randrange(ts_infeccion, max_ts)
+
+    return Query(str(nodo_infectado) + " " + str(ts_infeccion) + " " + str(nodo_consulta) + " " + str(ts_consulta))
+
+def n_queries_aleatorios(configuracion, n):
+    resultado = []
+    for i in range(0, n):
+        resultado.append(query_aleatorio(configuracion))
+    return resultado
+
 
 ########################################################################################################################
 ##########################################         MAIN         ########################################################
@@ -95,6 +120,7 @@ print("q - realizar una query")
 print("v - visualizar el fichero de referencia")
 print("r - crear un grafo aleatorio en memoria")
 print("rf - crear un grafo aleatorio y cargarlo en memoria")
+print("cc - comprobar correccion")
 print("h - ayuda")
 
 while True:
@@ -125,6 +151,19 @@ while True:
         configuracion.dibujar()
     elif (comando == "rf"):
         configuracion = leer_descripcion(True)
+    elif (comando == "cc"):
+        configuracion = leer_descripcion(True)
+        # Generar queries aleatorias para ese grafo
+        n = 10
+        queries = n_queries_aleatorios(configuracion, n)
+        correctos = 0
+        for query in queries:
+            # TODO: Revisar por qué da index out of range en configuracion.do
+            infectado = configuracion.do(query)
+            infectadoBFS = configuracion.BFS(query)
+            if infectado == infectadoBFS:
+                correctos += 1
+        print(str(correctos) + " queries correctas de " + str(n) + " pruebas")
     elif (comando == "r"):
         configuracion = leer_descripcion(False)
     else:

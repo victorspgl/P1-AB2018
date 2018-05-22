@@ -15,6 +15,7 @@ class Grafo:
         self.vertices = []
         self.aristas = []
         self.ordenado = False
+        self.max_ts = 0
 
         for i in range(0, num_vertices):
             vertice = Vertice(i)
@@ -27,6 +28,9 @@ class Grafo:
         self.vertices[vertice_final].add_arista(arista_invertida)
 
         heapq.heappush(self.aristas,[timestamp, arista])
+        # Actualiza el maximo timestamp si hace falta
+        if self.max_ts < timestamp:
+            self.max_ts = timestamp
 
     def ordenar(self):
         aux = []
@@ -229,3 +233,12 @@ class Grafo:
                     if hijo not in cerrados:
                         abiertos.append(hijo)
         return False
+
+    def get_max_ts(self):
+        return self.max_ts
+
+    def get_num_vertices(self):
+        return self.num_vertices
+
+    def get_num_aristas(self):
+        return self.num_aristas
