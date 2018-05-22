@@ -158,7 +158,7 @@ while True:
         queries = n_queries_aleatorios(configuracion, n)
         correctos = 0
         for query in queries:
-            # TODO: Revisar por qué da index out of range en configuracion.do
+            # TODO: Revisar por que da index out of range en configuracion.do
             infectado = configuracion.do(query)
             infectadoBFS = configuracion.BFS(query)
             if infectado == infectadoBFS:
