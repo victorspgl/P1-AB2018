@@ -16,13 +16,13 @@ import random
 def muestra_ayuda():
     print(" El comando 'c' permite cambiar fichero de referencia")
     print(" Este fichero debe seguir el siguiente formato:")
-    # TODO: Especificar formato de los ficheros de entradaa
+    print("     En la primera linea figura el numero de vertices y el numero de aristas, ambas cifras separadas por un espacio")
+    print("     En las siguientes lineas se describen las aristas usando el formato vertice_inicio, vertice_fin, timestamp")
     print(" El comando 'q' permite introducir una query al sistema")
     print(" El comando 'r' permite crear un grafo aleatorio, especificandolo de la siguiente manera:")
     print(" El comando 'rf' permite crear un grafo aleatorio y guardarlo en un fichero")
     print(" La query debe tener el siguiente formato:")
-    # TODO: Especificar el forma de las querys
-
+    print("     nodo comienzo infeccion, timestamp de infeccion, nodo a consultar, timestamp de la consulta")
 
 """ Funcion que pide al usuario el nombre de un fichero y lo intenta interpretar. Si el fichero no es valido lo vuelve
     a intentar. """
@@ -112,11 +112,12 @@ def n_queries_aleatorios(configuracion, n):
 ##########################################         MAIN         ########################################################
 ########################################################################################################################
 
-configuracion = leer_nombre_fichero()
+fichero_referencia = False
 
 print("Introduce un comando:")
 print("c - cambiar fichero de referencia")
-print("q - realizar una query")
+print("q - realizar una query con metodo 1")
+print("q - realizar una query con metodo 2")
 print("v - visualizar el fichero de referencia")
 print("r - crear un grafo aleatorio en memoria")
 print("rf - crear un grafo aleatorio y cargarlo en memoria")
@@ -129,7 +130,11 @@ while True:
 
     if (comando == "c"):
         configuracion = leer_nombre_fichero()
+        fichero_referencia = True
     elif (comando == "q"):
+        if fichero_referencia == False:
+            print("  Error, no se ha cargado ningun grafo sobre el que realizar queries")
+            continue
         query = leer_query()
         cProfile.run('configuracion.do(query)')
         infectado = configuracion.do(query)
@@ -138,6 +143,9 @@ while True:
         else:
             print("Nodo no infectado")
     elif (comando == "q2"):
+        if fichero_referencia == False:
+            print("  Error, no se ha cargado ningun grafo sobre el que realizar queries")
+            continue
         query = leer_query()
         cProfile.run('configuracion.do2(query)')
         infectado = configuracion.do2(query)
@@ -149,8 +157,10 @@ while True:
         muestra_ayuda()
     elif (comando == "v"):
         configuracion.dibujar()
+        fichero_referencia = True
     elif (comando == "rf"):
         configuracion = leer_descripcion(True)
+        fichero_referencia = True
     elif (comando == "cc"):
         configuracion = leer_descripcion(True)
         # Generar queries aleatorias para ese grafo
@@ -166,6 +176,7 @@ while True:
         print(str(correctos) + " queries correctas de " + str(n) + " pruebas")
     elif (comando == "r"):
         configuracion = leer_descripcion(False)
+        fichero_referencia = True
     else:
         print("Comando incorrecto")
         muestra_ayuda()
