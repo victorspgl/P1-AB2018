@@ -4,7 +4,6 @@
 
 import random
 from Grafo import Grafo
-import numpy as np
 
 def random_graph(conFichero, num_vertices, num_aristas, max_time):
     if num_aristas > num_vertices*(num_vertices -1):

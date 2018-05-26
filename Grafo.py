@@ -5,8 +5,7 @@
 from Vertice import Vertice
 from Arista import Arista
 import heapq
-import networkx as nx
-from matplotlib import pyplot as plt
+
 
 class Grafo:
     def __init__(self, num_vertices, num_aristas):
