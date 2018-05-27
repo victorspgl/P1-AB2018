@@ -49,10 +49,15 @@ def intentar_leer_fichero(nombre_fichero):
 """ Funcion que pide al usuario una query. Si la query no es valida lo vuelve a intentar. """
 
 
-def leer_query():
+def leer_query(configuracion):
     query = None
     while query is None:
         lectura_teclado = raw_input("Introduce query: ")
+        nodo_infectado, timestamp_infeccion, nodo_consulta, timestamp_consulta = [int(i) for i in lectura_teclado.split(' ')]
+        if(nodo_consulta > configuracion.num_vertices or nodo_infectado > configuracion.num_vertices or
+           nodo_infectado < 0 or configuracion < 0 or timestamp_consulta < 0 or timestamp_infeccion < 0):
+            print("Query incorrecta")
+            continue
         query = construir_query(lectura_teclado)
     return query
 
@@ -136,7 +141,7 @@ while True:
         if fichero_referencia == False:
             print("  Error, no se ha cargado ningun grafo sobre el que realizar queries")
             continue
-        query = leer_query()
+        query = leer_query(configuracion)
         cProfile.run('configuracion.do(query)')
         infectado = configuracion.do(query)
         if infectado:
@@ -147,7 +152,7 @@ while True:
         if fichero_referencia == False:
             print("  Error, no se ha cargado ningun grafo sobre el que realizar queries")
             continue
-        query = leer_query()
+        query = leer_query(configuracion)
         cProfile.run('configuracion.do2(query)')
         infectado = configuracion.do2(query)
         if infectado:
