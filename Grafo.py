@@ -190,7 +190,7 @@ class Grafo:
                 if tamanyo > 0:
                     modificado = True
 
-        return infectados[nodo_final] <= timestamp_consulta
+        return (infectados[nodo_final] != -1) and (infectados[nodo_final] <= timestamp_consulta)
 
     def eliminarEsperando(self, infectados, espera):
         pendientes = []
