@@ -99,7 +99,7 @@ class Grafo:
         while (not (nodo_final in conjunto_visitados)):
             arista_elegida = None
 
-            while arista_elegida == None:
+            while arista_elegida == None and len(vector_aristas) > 0:
 
                 timestamp, arista = heapq.heappop(vector_aristas) # O(log(n))
 
