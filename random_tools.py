@@ -4,8 +4,10 @@
 
 import random
 from Grafo import Grafo
-from Query import Query
 
+"""
+    Funcion que genera un grafo aleatorio. Donde no existe mas de una arista entre dos vertices.
+"""
 def random_graph(conFichero, num_vertices, num_aristas, max_time):
     if num_aristas > num_vertices*(num_vertices -1):
         print("Numero de aristas superior a n*(n-1). Siendo n el numero de vertices.")
@@ -56,7 +58,9 @@ def random_graph(conFichero, num_vertices, num_aristas, max_time):
 
     return configuracion
 
-
+"""
+    Funcion que genera un fichero que contiene "n" queries.
+"""
 def n_queries_aleatorios(configuracion, n):
     fichero_objeto = open("random_queries.txt", "w")
     fichero_objeto.write(str(n) + "\n")

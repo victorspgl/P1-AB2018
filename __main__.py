@@ -17,7 +17,6 @@ import time
 """
     Muestra por pantalla un resumen de los comandos que se pueden ejecutar
 """
-
 def muestra_ayuda():
     print(" El comando 'c' permite cambiar fichero de referencia")
     print(" Este fichero debe seguir el siguiente formato:")
@@ -29,8 +28,10 @@ def muestra_ayuda():
     print(" El comando 'rf' permite crear un grafo aleatorio y guardarlo en un fichero")
     print(" La query debe tener el siguiente formato:")
     print("     nodo comienzo infeccion, timestamp de infeccion, nodo a consultar, timestamp de la consulta")
-    print(" El comando 'gq' permite generar un numero aleatorio de queries sobre un grafo")
-    print(" El comando 'cc' permite validar y medir el tiempo de ejecucion de un fichero de queries y un grafo")
+    print(" El comando 'gq' permite generar un numero aleatorio de queries sobre un grafo y almacenarlas en el fichero random_queries.txt")
+    print(" El comando 'cc' permite validar los algoritmo utilizando un fichero de queries y un grafo")
+    print(" El comando 't' permite medir el tiempo de ejecucion de los algoritmos utilizando un fichero de queries y un grafo")
+
 
 
 
@@ -38,7 +39,6 @@ def muestra_ayuda():
     Funcion que pide al usuario el nombre de un fichero y lo intenta interpretar como grafo. Si el fichero no es valido
     lo vuelve a intentar.
 """
-
 def leer_nombre_fichero():
     configuracion = None
     while configuracion is None:
@@ -218,17 +218,21 @@ while True:
         configuracion = leer_nombre_fichero()
         queries = leer_fichero_query()
         tiempos_alg1 = []
+        sum1 = 0
         tiempos_alg2 = []
+        sum2 = 0
         for query in queries:
             start = time.time()
             infectado = configuracion.do(query)
             end = time.time()
             tiempos_alg1.append(end-start)
+            sum1 = sum1 + (end - start)
 
             start = time.time()
             infectado2 = configuracion.do2(query)
             end = time.time()
             tiempos_alg2.append(end-start)
+            sum2 = sum2 + (end - start)
 
 
         cadena  = "Tiempos por query "
@@ -241,6 +245,9 @@ while True:
         print(cadena)
         print(cadena1)
         print(cadena2)
+
+        print("Media Metodo 1: " + str(format(sum1 / len(queries),'2.4f' )))
+        print("Media Metodo 2: " + str(format(sum2 / len(queries),'2.4f' )))
 
     elif (comando == "r"):
         configuracion = leer_descripcion(False)

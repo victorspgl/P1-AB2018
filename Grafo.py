@@ -7,7 +7,12 @@ from Arista import Arista
 import heapq
 
 
+# Clase que permite representar un grafo en memoria.
+#   Esta compuesto por una lista de veritces y una lista de aristas
+
 class Grafo:
+
+    # Constructor de la clase grafo
     def __init__(self, num_vertices, num_aristas):
         self.num_vertices = num_vertices
         self.num_aristas = num_aristas
@@ -20,6 +25,7 @@ class Grafo:
             vertice = Vertice(i)
             self.vertices.append(vertice)
 
+    # Funcion que añade una arista al grafo. Internamente se representan como dos aristas dirigidas.
     def add_arista(self, vertice_inicial, vertice_final, timestamp):
         arista = Arista(vertice_inicial, vertice_final, timestamp)
         arista_invertida = Arista(vertice_final, vertice_inicial, timestamp)
@@ -31,6 +37,7 @@ class Grafo:
         if self.max_ts < timestamp:
             self.max_ts = timestamp
 
+    # Ordena el conjunto de las aristas por timestamp
     def ordenar(self):
         aux = []
 
@@ -41,28 +48,12 @@ class Grafo:
         self.aristas = aux
         self.ordenado = True
 
-
+    # Obtiene la arista con el timestamp "indice", comenzando desde el menor timestamp.
     def get_arista(self, indice):
         if self.ordenado == False :
             self.ordenar()
 
         return self.aristas[indice]
-
-
-    def dibujar(self):
-        G = nx.Graph()
-        G.add_nodes_from(range(0, self.num_vertices))
-        for vert in self.vertices:
-            for aris in vert.get_aristas():
-                G.add_edge(vert.id, aris.get_vertice_final(), weight=aris.get_timestamp())
-
-        edge_labels = dict([((u, v,), d['weight'])
-                            for u, v, d in G.edges(data=True)])
-        pos = nx.spring_layout(G)
-        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
-        nx.draw_networkx(G, pos, node_size=1500, node_color='yellow')
-        plt.show()
-
 
 
     """
@@ -192,6 +183,12 @@ class Grafo:
 
         return (infectados[nodo_final] != -1) and (infectados[nodo_final] <= timestamp_consulta)
 
+
+    """
+        Funcion que recorre de forma recursiva la lista de aristas "espera". Esta lista contiene aristas
+        con el mismo timestamp. Si algun nodo resulta infectado al recorrer la lista se vuelve a llamar recursivamente
+        Sino finaliza su ejecucion
+    """
     def eliminarEsperando(self, infectados, espera):
         pendientes = []
         tamanyo = 0
@@ -214,30 +211,14 @@ class Grafo:
         if modificado:
             self.eliminarEsperando(infectados, pendientes)
 
-    def BFS(self, query):
-        orig = query.get_nodo_infectado()
-        dest = query.get_nodo_consulta()
-        limite = query.get_timestamp_consulta()
-        abiertos = []
-        cerrados = []
-        abiertos.append(self.vertices[orig])
-        while len(abiertos) > 0:
-            nodo = abiertos.pop(len(abiertos)-1)   # Obtiene el ultimo nodo
-            cerrados.append(nodo)
-            for arista in nodo.get_aristas():
-                if arista.get_timestamp() < limite:
-                    hijo = self.vertices[arista.get_vertice_final()]
-                    if hijo == self.vertices[dest]:
-                        return True
-                    if hijo not in cerrados:
-                        abiertos.append(hijo)
-        return False
-
+    # Devuelve el mayor timestamp de las aristas del grafo
     def get_max_ts(self):
         return self.max_ts
 
+    # Devuelve el numero de vertices del grafo
     def get_num_vertices(self):
         return self.num_vertices
 
+    # Devuelve el numero de aristas del grafo
     def get_num_aristas(self):
         return self.num_aristas
