@@ -4,6 +4,7 @@
 
 import random
 from Grafo import Grafo
+from Query import Query
 
 def random_graph(conFichero, num_vertices, num_aristas, max_time):
     if num_aristas > num_vertices*(num_vertices -1):
@@ -55,3 +56,24 @@ def random_graph(conFichero, num_vertices, num_aristas, max_time):
 
     return configuracion
 
+
+def n_queries_aleatorios(configuracion, n):
+    fichero_objeto = open("random_queries.txt", "w")
+    fichero_objeto.write(str(n) + "\n")
+    for i in range(0, n):
+        max_vert = configuracion.get_num_vertices()
+        max_ts = configuracion.get_max_ts()
+
+        nodo_infectado = random.randrange(0, max_vert)
+        fichero_objeto.write(str(nodo_infectado) + " ")
+
+        ts_infeccion = random.randrange(0, max_ts)
+        fichero_objeto.write(str(ts_infeccion) + " ")
+
+        nodo_consulta = random.randrange(0, max_vert)
+        fichero_objeto.write(str(nodo_consulta) + " ")
+
+        ts_consulta = random.randrange(ts_infeccion, max_ts)
+        fichero_objeto.write(str(ts_consulta))
+        fichero_objeto.write("\n")
+    fichero_objeto.close()
